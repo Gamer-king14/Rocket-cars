@@ -4,76 +4,82 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>ROCKET CARS</title>
 <style>
-*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#07111f;color:#fff;font-family:Arial,sans-serif}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.top{display:flex;justify-content:center;align-items:center;gap:22px;padding:15px}.score{font-size:clamp(24px,5vw,42px);font-weight:900;text-shadow:0 3px 12px #000}.clock{font-size:20px;font-weight:bold;background:#081827cc;padding:8px 14px;border-radius:12px}.brand{position:absolute;top:18px;left:18px;font-weight:900;letter-spacing:3px;color:#53d7ff;text-shadow:0 2px 10px #000}.hint{position:absolute;top:68px;left:18px;color:#d4eaff;font-size:13px;text-shadow:0 2px 5px #000}.boostWrap{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:190px;text-align:center;font-weight:bold;text-shadow:0 2px 5px #000}.boostBar{height:12px;background:#20364b;border:2px solid #d9f5ff;border-radius:20px;overflow:hidden;margin-top:5px}.boostFill{height:100%;width:100%;background:linear-gradient(90deg,#00aaff,#8df5ff)}#controls{position:fixed;inset:0;pointer-events:none}.pad{position:absolute;bottom:22px;width:150px;height:135px;pointer-events:auto;touch-action:none}.left{left:16px}.right{right:16px}.key{position:absolute;border:1px solid #b8eaff88;background:#0b294dcc;color:white;border-radius:16px;font-size:22px;font-weight:bold;width:58px;height:54px;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:0 4px 14px #0008}.up{left:46px;top:0}.down{left:46px;bottom:0}.leftkey{left:0;top:40px}.rightkey{right:0;top:40px}.jump{right:18px;bottom:82px;background:#176b9b}.boost{right:18px;bottom:18px;background:#a64b13}.reset{position:absolute;right:18px;top:18px;pointer-events:auto;background:#12334a;color:white;border:1px solid #8bdfff;border-radius:10px;padding:9px 12px}
-@media(min-width:800px){.hint:after{content:"  •  WASD/Pfeile: fahren  •  Leertaste: springen  •  Shift: Boost  •  R: zurücksetzen"}.pad{opacity:.45}.pad:hover{opacity:1}}
+*{box-sizing:border-box}body{margin:0;overflow:hidden;background:#07111f;color:#fff;font-family:Arial,sans-serif}canvas{display:block}#hud{position:fixed;inset:0;pointer-events:none}.top{display:flex;justify-content:center;align-items:center;gap:22px;padding:15px}.score{font-size:clamp(25px,5vw,44px);font-weight:900;text-shadow:0 3px 12px #000}.clock{font-size:20px;font-weight:bold;background:#081827dd;padding:8px 14px;border-radius:12px}.brand{position:absolute;top:18px;left:18px;font-weight:900;letter-spacing:3px;color:#53d7ff;text-shadow:0 2px 10px #000}.hint{position:absolute;top:68px;left:18px;color:#e3f3ff;font-size:13px;text-shadow:0 2px 5px #000}.boostWrap{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);width:190px;text-align:center;font-weight:bold;text-shadow:0 2px 5px #000}.boostBar{height:12px;background:#20364b;border:2px solid #d9f5ff;border-radius:20px;overflow:hidden;margin-top:5px}.boostFill{height:100%;width:100%;background:linear-gradient(90deg,#00aaff,#8df5ff)}#controls{position:fixed;inset:0;pointer-events:none}.pad{position:absolute;bottom:22px;width:150px;height:135px;pointer-events:auto;touch-action:none}.left{left:16px}.right{right:16px}.key{position:absolute;border:1px solid #b8eaff88;background:#0b294dcc;color:white;border-radius:16px;font-size:20px;font-weight:bold;width:58px;height:54px;display:grid;place-items:center;user-select:none;touch-action:none;box-shadow:0 4px 14px #0008}.up{left:46px;top:0}.down{left:46px;bottom:0}.leftkey{left:0;top:40px}.rightkey{right:0;top:40px}.jump{right:18px;bottom:82px;background:#176b9b}.boost{right:18px;bottom:18px;background:#a64b13}.reset{position:absolute;right:18px;top:18px;pointer-events:auto;background:#12334a;color:white;border:1px solid #8bdfff;border-radius:10px;padding:9px 12px}
+@media(min-width:800px){.hint:after{content:"  •  WASD/Pfeile: fahren  •  Leertaste: springen  •  Shift: Boost  •  R: Neustart"}.pad{opacity:.4}.pad:hover{opacity:1}}
 </style></head>
 <body>
-<div id="hud"><div class="brand">ROCKET CARS</div><div class="hint">Fahre den Ball ins gegnerische Tor! Orange Autos sind deine Gegner.</div><div class="top"><div class="score" id="score">0 : 0</div><div class="clock" id="clock">02:00</div></div><div class="boostWrap">BOOST <span id="boostNum">100</span>%<div class="boostBar"><div class="boostFill" id="boostFill"></div></div></div><button class="reset" id="reset">↻ Neustart</button></div>
+<div id="hud"><div class="brand">ROCKET CARS</div><div class="hint">RIESEN-ARENA • Der orange Gegner lernt aus seinen Fehlern!</div><div class="top"><div class="score" id="score">0 : 0</div><div class="clock" id="clock">02:00</div></div><div class="boostWrap">BOOST <span id="boostNum">100</span>%<div class="boostBar"><div class="boostFill" id="boostFill"></div></div></div><button class="reset" id="reset">↻ Neustart</button></div>
 <div id="controls"><div class="pad left"><div class="key up" data-key="w">▲</div><div class="key down" data-key="s">▼</div><div class="key leftkey" data-key="a">◀</div><div class="key rightkey" data-key="d">▶</div></div><div class="pad right"><div class="key jump" data-key=" ">SPRUNG</div><div class="key boost" data-key="shift">BOOST</div></div></div>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x87bce0);scene.fog=new THREE.Fog(0x87bce0,55,150);
-const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,200);
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xd9efff,0x28405a,2));const sun=new THREE.DirectionalLight(0xffffff,2.5);sun.position.set(-8,18,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+const W=80,L=120,HALF_W=W/2,HALF_L=L/2,GOAL_W=18,GOAL_H=8;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x79b5df);scene.fog=new THREE.Fog(0x79b5df,100,260);
+const camera=new THREE.PerspectiveCamera(66,innerWidth/innerHeight,.1,350);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xe1f4ff,0x263c50,2.1));const sun=new THREE.DirectionalLight(0xffffff,2.7);sun.position.set(-35,65,35);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-90;sun.shadow.camera.right=90;sun.shadow.camera.top=90;sun.shadow.camera.bottom=-90;scene.add(sun);
 const mat=(c,r=.7,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
-const grass=mat(0x287d59),line=mat(0xd8f4ff),blue=mat(0x168ee8,.35,.25),orange=mat(0xff7a24,.35,.25),black=mat(0x142231,.35,.2),ballMat=mat(0xf3f6fa,.28,.15);
-const floor=new THREE.Mesh(new THREE.BoxGeometry(48,.5,78),grass);floor.position.y=-.35;floor.receiveShadow=true;scene.add(floor);
-for(let z=-36;z<=36;z+=6){const stripe=new THREE.Mesh(new THREE.BoxGeometry(48,.015,4),mat(z%12===0?0x318b62:0x287d59));stripe.position.set(0,-.09,z);scene.add(stripe)}
-function box(w,h,d,x,y,z,material){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
-box(48,3,.6,0,1.2,-39,black);box(48,3,.6,0,1.2,39,black);box(.6,3,78,-24,1.2,0,black);box(.6,3,78,24,1.2,0,black);
-for(let z of [-39,39]){const goalmat=z<0?orange:blue;box(14,4,.7,0,2,z,goalmat);box(13.5,3.6,.15,0,2,z+(z<0?.42:-.42),black)}
-for(let x of [-24,24])for(let z of [-39,39])box(.7,4,.7,x,2,z,mat(0x19364b));
-const mid=new THREE.Mesh(new THREE.RingGeometry(5.8,6,.9,64),line);mid.rotation.x=-Math.PI/2;mid.position.y=-.08;scene.add(mid);
-const center=new THREE.Mesh(new THREE.CircleGeometry(1.1,48),line);center.rotation.x=-Math.PI/2;center.position.y=-.075;scene.add(center);
-for(let z of [-18,-9,0,9,18]){const stripe=new THREE.Mesh(new THREE.BoxGeometry(48,.025,.12),line);stripe.position.set(0,-.075,z);scene.add(stripe)}
-// Player car: custom original low-poly body and wheels
-const car=new THREE.Group();scene.add(car);const body=new THREE.Mesh(new THREE.BoxGeometry(2.1,.65,3.2),blue);body.position.y=.65;body.castShadow=true;car.add(body);
-const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.35,.65,1.45),mat(0x9be8ff,.22,.35));cabin.position.set(0,1.18,-.15);cabin.castShadow=true;car.add(cabin);
-const nose=new THREE.Mesh(new THREE.BoxGeometry(1.65,.25,.55),mat(0x07518f));nose.position.set(0,.72,-1.55);car.add(nose);
-for(const x of [-1.08,1.08])for(const z of [-1,1]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.28,16),black);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.42,z);wheel.castShadow=true;car.add(wheel)}
-// Computergesteuerter Gegner
-const bot=new THREE.Group();scene.add(bot);const botBody=new THREE.Mesh(new THREE.BoxGeometry(2.1,.65,3.2),orange);botBody.position.y=.65;botBody.castShadow=true;bot.add(botBody);
-const botCabin=new THREE.Mesh(new THREE.BoxGeometry(1.35,.65,1.45),mat(0xffc18c,.22,.3));botCabin.position.set(0,1.18,-.15);bot.add(botCabin);
-for(const x of [-1.08,1.08])for(const z of [-1,1]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.28,16),black);w.rotation.z=Math.PI/2;w.position.set(x,.42,z);bot.add(w)}
-let botHeading=Math.PI,botVel=new THREE.Vector3();
-const ball=new THREE.Mesh(new THREE.SphereGeometry(1.25,32,24),ballMat);ball.position.set(0,1.4,0);ball.castShadow=true;scene.add(ball);
-const seams=new THREE.Group();ball.add(seams);for(let i=0;i<3;i++){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.255,.018,6,48),mat(0x9aa7b2));ring.rotation.set(i*.8,i*1.1,0);seams.add(ring)}
-const boostFlame=new THREE.Mesh(new THREE.ConeGeometry(.38,1.5,12),mat(0x37dfff,.25));boostFlame.rotation.x=-Math.PI/2;boostFlame.position.set(0,.65,2.2);car.add(boostFlame);
-let carVel=new THREE.Vector3(),ballVel=new THREE.Vector3(),heading=0,boost=100,blueScore=0,orangeScore=0,time=120,finished=false;
+const grass=mat(0x287d59),line=mat(0xd8f4ff),blue=mat(0x168ee8,.32,.25),orange=mat(0xff7925,.32,.25),dark=mat(0x142231,.4,.2),ballMat=mat(0xf3f6fa,.25,.15);
+function box(w,h,d,x,y,z,material,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+const floor=new THREE.Mesh(new THREE.BoxGeometry(W,.6,L),grass);floor.position.y=-.35;floor.receiveShadow=true;scene.add(floor);
+for(let z=-54;z<=54;z+=9){const stripe=new THREE.Mesh(new THREE.BoxGeometry(W,.018,6),mat(z%18===0?0x318b62:0x287d59));stripe.position.set(0,-.045,z);scene.add(stripe)}
+// Große Arena-Wände und Seitenbanden
+box(W,5,.8,0,2.2,-HALF_L,dark);box(W,5,.8,0,2.2,HALF_L,dark);box(.8,5,L,-HALF_W,2.2,0,dark);box(.8,5,L,HALF_W,2.2,0,dark);
+for(const z of [-HALF_L,HALF_L]){
+ const goalColor=z<0?orange:blue;
+ // Hohe, breite Tore mit Pfosten, Querlatte und Netzrückwand
+ box(GOAL_W,GOAL_H,.65,0,GOAL_H/2,z,goalColor);
+ box(.55,GOAL_H,9,-GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
+ box(.55,GOAL_H,9,GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
+ box(GOAL_W, .65,9,0,GOAL_H,z+(z<0?-4.3:4.3),goalColor);
+ const net=new THREE.MeshStandardMaterial({color:0xd8f3ff,wireframe:true,transparent:true,opacity:.22});
+ box(GOAL_W,GOAL_H,9,0,GOAL_H/2,z+(z<0?-4.3:4.3),net);
+}
+for(let x of [-HALF_W,HALF_W])for(let z of [-HALF_L,HALF_L])box(1,6,1,x,3,z,mat(0x19364b));
+// Stadion-Tribünen und Flutlicht
+for(const side of [-1,1]){for(let row=0;row<5;row++){const seat=mat(row%2?0x244d70:0x1a3a58);box(10,1.6,L+18,side*(HALF_W+7+row*1.7),-2+row*1.15,0,seat)}}
+for(const x of [-47,47])for(const z of [-65,65]){box(1,23,1,x,11,z,mat(0x33485a));const lamp=new THREE.PointLight(0xc7edff,90,90);lamp.position.set(x,23,z);scene.add(lamp);box(5,.6,2,x,23,z,mat(0xe8f8ff,.2,.1))}
+const mid=new THREE.Mesh(new THREE.RingGeometry(8.5,8.8,.9,64),line);mid.rotation.x=-Math.PI/2;mid.position.y=-.045;scene.add(mid);
+const center=new THREE.Mesh(new THREE.CircleGeometry(1.8,48),line);center.rotation.x=-Math.PI/2;center.position.y=-.04;scene.add(center);
+for(let z of [-36,-18,0,18,36]){const stripe=new THREE.Mesh(new THREE.BoxGeometry(W,.025,.14),line);stripe.position.set(0,-.035,z);scene.add(stripe)}
+function makeCar(color,glassColor){const car=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(2.5,.8,3.8),color);body.position.y=.75;body.castShadow=true;car.add(body);const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.55,.8,1.8),mat(glassColor,.2,.35));cabin.position.set(0,1.45,-.2);cabin.castShadow=true;car.add(cabin);const nose=new THREE.Mesh(new THREE.BoxGeometry(2,.28,.7),dark);nose.position.set(0,.83,-1.85);car.add(nose);for(const x of [-1.28,1.28])for(const z of [-1.2,1.2]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,.32,18),dark);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.45,z);wheel.castShadow=true;car.add(wheel)}return car}
+const car=makeCar(blue,0x9be8ff);scene.add(car);
+const bot=makeCar(orange,0xffc18c);scene.add(bot);
+const ball=new THREE.Mesh(new THREE.SphereGeometry(1.55,36,28),ballMat);ball.position.set(0,1.7,0);ball.castShadow=true;scene.add(ball);
+const seams=new THREE.Group();ball.add(seams);for(let i=0;i<3;i++){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.558,.022,6,56),mat(0x9aa7b2));ring.rotation.set(i*.8,i*1.1,0);seams.add(ring)}
+const flame=new THREE.Mesh(new THREE.ConeGeometry(.42,1.8,12),mat(0x37dfff,.25));flame.rotation.x=-Math.PI/2;flame.position.set(0,.75,2.6);car.add(flame);
+let carVel=new THREE.Vector3(),ballVel=new THREE.Vector3(),botVel=new THREE.Vector3(),heading=0,botHeading=Math.PI,boost=100,blueScore=0,orangeScore=0,time=120,finished=false;
 const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' ')e.preventDefault();if(e.key.toLowerCase()==='r')resetGame()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
 document.querySelectorAll('.key').forEach(el=>{const k=el.dataset.key;const down=e=>{e.preventDefault();keys[k]=true},up=e=>{e.preventDefault();keys[k]=false};el.addEventListener('pointerdown',down);el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up)});
-function resetGame(){car.position.set(0,0,28);carVel.set(0,0,0);heading=0;bot.position.set(0,0,-28);botVel.set(0,0,0);botHeading=Math.PI;ball.position.set(0,1.4,0);ballVel.set(0,0,0);boost=100;time=120;finished=false;blueScore=0;orangeScore=0;updateHud()}
+function resetGame(){car.position.set(0,0,43);carVel.set(0,0,0);heading=0;bot.position.set(0,0,-43);botVel.set(0,0,0);botHeading=Math.PI;ball.position.set(0,1.7,0);ballVel.set(0,0,0);boost=100;time=120;finished=false;blueScore=0;orangeScore=0;botBrain.misses=0;botBrain.wallHits=0;botBrain.aggression=1;botBrain.offset=0;updateHud()}
+const botBrain={misses:0,wallHits:0,aggression:1,offset:0,stuck:0,lastZ:-43,lastX:0,learnTimer:0};
 function updateHud(){document.getElementById('score').textContent=blueScore+' : '+orangeScore;document.getElementById('boostNum').textContent=Math.round(boost);document.getElementById('boostFill').style.width=boost+'%';document.getElementById('clock').textContent=String(Math.floor(time/60)).padStart(2,'0')+':'+String(Math.floor(time%60)).padStart(2,'0')}
 document.getElementById('reset').onclick=resetGame;
 const clock=new THREE.Clock();let hudTick=0;
+function scoreGoal(blueTeam){if(blueTeam)blueScore++;else orangeScore++;ball.position.set(0,1.7,0);ballVel.set(0,0,0);car.position.set(0,0,43);carVel.set(0,0,0);bot.position.set(0,0,-43);botVel.set(0,0,0);botBrain.offset=0;botBrain.stuck=0}
 function step(dt){if(finished)return;time=Math.max(0,time-dt);if(time===0)finished=true;
 const forward=(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0),turn=(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0);
-const speed=carVel.length();heading+=turn*dt*(1.8+Math.min(speed,14)*.055)*(forward||speed>.4?1:0);const dir=new THREE.Vector3(-Math.sin(heading),0,-Math.cos(heading));
-const boosting=!!keys.shift&&boost>0&&forward>=0;boostFlame.visible=boosting;
-if(forward)carVel.addScaledVector(dir,forward*(boosting?28:15)*dt);
-if(boosting)boost=Math.max(0,boost-36*dt);else boost=Math.min(100,boost+12*dt);
-if(keys[' ']&&car.position.y<.04)carVel.y=8.5;
-carVel.y-=19*dt;car.position.addScaledVector(carVel,dt);if(car.position.y<0){car.position.y=0;carVel.y=Math.max(0,carVel.y)}
-carVel.x*=Math.pow(.985,dt*60);carVel.z*=Math.pow(.985,dt*60);const flat=Math.hypot(carVel.x,carVel.z);if(flat>22){carVel.x*=22/flat;carVel.z*=22/flat}
-car.position.x=THREE.MathUtils.clamp(car.position.x,-22.2,22.2);car.position.z=THREE.MathUtils.clamp(car.position.z,-37,37);car.rotation.y=heading;
-ballVel.y-=15*dt;ball.position.addScaledVector(ballVel,dt);if(ball.position.y<1.25){ball.position.y=1.25;ballVel.y=Math.abs(ballVel.y)*.72;if(Math.abs(ballVel.y)<.6)ballVel.y=0}
-if(ball.position.x<-22.6||ball.position.x>22.6){ball.position.x=THREE.MathUtils.clamp(ball.position.x,-22.6,22.6);ballVel.x*=-.8}
-if(Math.abs(ball.position.z)>38.1){if(Math.abs(ball.position.x)<7&&ball.position.y<4.2){if(ball.position.z<0)blueScore++;else orangeScore++;ball.position.set(0,2,0);ballVel.set(0,0,0);car.position.set(0,0,28);carVel.set(0,0,0);bot.position.set(0,0,-28);botVel.set(0,0,0)}else{ball.position.z=Math.sign(ball.position.z)*38.1;ballVel.z*=-.8}}
-// Gegner verfolgt den Ball, richtet sich aus und stößt ihn Richtung blaues Tor
-const target=new THREE.Vector3(ball.position.x,0,ball.position.z);
-const desired=Math.atan2(-(target.x-bot.position.x),-(target.z-bot.position.z));
-let angle=((desired-botHeading+Math.PI*3)%(Math.PI*2))-Math.PI;
-botHeading+=THREE.MathUtils.clamp(angle,-2.1*dt,2.1*dt);
-const botDir=new THREE.Vector3(-Math.sin(botHeading),0,-Math.cos(botHeading));
-botVel.addScaledVector(botDir,12*dt);botVel.multiplyScalar(Math.pow(.982,dt*60));
-const botSpeed=Math.hypot(botVel.x,botVel.z);if(botSpeed>13){botVel.x*=13/botSpeed;botVel.z*=13/botSpeed}
-bot.position.addScaledVector(botVel,dt);bot.position.x=THREE.MathUtils.clamp(bot.position.x,-22,22);bot.position.z=THREE.MathUtils.clamp(bot.position.z,-37,37);bot.rotation.y=botHeading;
-const botDiff=ball.position.clone().sub(bot.position.clone().add(new THREE.Vector3(0,.8,0)));const botDist=botDiff.length();
-if(botDist<2.5){const bn=botDiff.normalize();ball.position.addScaledVector(bn,2.5-botDist);ballVel.addScaledVector(bn,Math.max(7,botVel.dot(bn)+9));ballVel.x+=botVel.x*.35;ballVel.z+=botVel.z*.35}
-const diff=ball.position.clone().sub(car.position.clone().add(new THREE.Vector3(0,.8,0)));const dist=diff.length();if(dist<2.45){const n=diff.normalize();ball.position.addScaledVector(n,2.45-dist);const hit=Math.max(5,carVel.dot(n)+7);ballVel.addScaledVector(n,hit);ballVel.x+=carVel.x*.35;ballVel.z+=carVel.z*.35;ballVel.y+=Math.max(0,carVel.y)*.35}
-ballVel.multiplyScalar(Math.pow(.997,dt*60));ball.rotation.x+=ballVel.z*dt*.7;ball.rotation.z-=ballVel.x*dt*.7;
-const camTarget=car.position.clone().add(new THREE.Vector3(0,2.5,0));const camPos=car.position.clone().add(new THREE.Vector3(Math.sin(heading)*10,7,Math.cos(heading)*10));camera.position.lerp(camPos,.09);camera.lookAt(camTarget);
+const speed=carVel.length();heading+=turn*dt*(1.8+Math.min(speed,18)*.05)*(forward||speed>.4?1:0);const dir=new THREE.Vector3(-Math.sin(heading),0,-Math.cos(heading));
+const boosting=!!keys.shift&&boost>0&&forward>=0;flame.visible=boosting;if(forward)carVel.addScaledVector(dir,forward*(boosting?31:17)*dt);if(boosting)boost=Math.max(0,boost-34*dt);else boost=Math.min(100,boost+11*dt);
+if(keys[' ']&&car.position.y<.04)carVel.y=9;carVel.y-=20*dt;car.position.addScaledVector(carVel,dt);if(car.position.y<0){car.position.y=0;carVel.y=Math.max(0,carVel.y)}
+carVel.x*=Math.pow(.986,dt*60);carVel.z*=Math.pow(.986,dt*60);const flat=Math.hypot(carVel.x,carVel.z);if(flat>25){carVel.x*=25/flat;carVel.z*=25/flat}
+car.position.x=THREE.MathUtils.clamp(car.position.x,-HALF_W+2,-2+HALF_W);car.position.z=THREE.MathUtils.clamp(car.position.z,-HALF_L+3,HALF_L-3);car.rotation.y=heading;
+// Ball physics and side walls
+ballVel.y-=16*dt;ball.position.addScaledVector(ballVel,dt);if(ball.position.y<1.55){ball.position.y=1.55;ballVel.y=Math.abs(ballVel.y)*.73;if(Math.abs(ballVel.y)<.6)ballVel.y=0}
+if(ball.position.x<-HALF_W+1.6||ball.position.x>HALF_W-1.6){ball.position.x=THREE.MathUtils.clamp(ball.position.x,-HALF_W+1.6,HALF_W-1.6);ballVel.x*=-.82}
+if(ball.position.z<-HALF_L+1.6||ball.position.z>HALF_L-1.6){const inGoal=Math.abs(ball.position.x)<GOAL_W/2-1.2&&ball.position.y<GOAL_H-1.3;if(inGoal){if(ball.position.z<0)scoreGoal(true);else scoreGoal(false)}else{ball.position.z=THREE.MathUtils.clamp(ball.position.z,-HALF_L+1.6,HALF_L-1.6);ballVel.z*=-.82}}
+// Adaptive opponent: remembers misses and wall collisions, then changes approach angle and aggression.
+botBrain.learnTimer+=dt;
+const botToBall=ball.position.clone().sub(bot.position.clone().add(new THREE.Vector3(0,.8,0)));const botDist=botToBall.length();
+if(botDist<3.5&&botDist>2.65){botBrain.misses++;botBrain.offset=THREE.MathUtils.clamp(botBrain.offset+(Math.random()-.5)*.22,-2.8,2.8);botBrain.aggression=Math.min(1.65,botBrain.aggression+.035)}
+if(bot.position.x<-HALF_W+3||bot.position.x>HALF_W-3){botBrain.wallHits++;botBrain.offset*=.7;botVel.x*=-.35}
+if(botBrain.learnTimer>2){const moved=Math.hypot(bot.position.x-botBrain.lastX,bot.position.z-botBrain.lastZ);if(moved<1.1&&botDist>5){botBrain.stuck++;botBrain.offset=0;botHeading+=.65}else botBrain.stuck=Math.max(0,botBrain.stuck-1);botBrain.lastX=bot.position.x;botBrain.lastZ=bot.position.z;botBrain.learnTimer=0}
+const lead=ball.position.clone().addScaledVector(ballVel,.22);const attackX=THREE.MathUtils.clamp(lead.x+botBrain.offset,-HALF_W+6,HALF_W-6);const attackZ=THREE.MathUtils.clamp(lead.z+2.2,-HALF_L+8,HALF_L-8);
+const desired=Math.atan2(-(attackX-bot.position.x),-(attackZ-bot.position.z));let angle=((desired-botHeading+Math.PI*3)%(Math.PI*2))-Math.PI;botHeading+=THREE.MathUtils.clamp(angle,-2.5*dt,2.5*dt);
+const botDir=new THREE.Vector3(-Math.sin(botHeading),0,-Math.cos(botHeading));botVel.addScaledVector(botDir,15*botBrain.aggression*dt);botVel.multiplyScalar(Math.pow(.984,dt*60));const bs=Math.hypot(botVel.x,botVel.z);if(bs>16){botVel.x*=16/bs;botVel.z*=16/bs}bot.position.addScaledVector(botVel,dt);bot.position.x=THREE.MathUtils.clamp(bot.position.x,-HALF_W+3,HALF_W-3);bot.position.z=THREE.MathUtils.clamp(bot.position.z,-HALF_L+5,HALF_L-5);bot.rotation.y=botHeading;
+const actualDiff=ball.position.clone().sub(bot.position.clone().add(new THREE.Vector3(0,.8,0)));const actualDist=actualDiff.length();if(actualDist<2.9){const n=actualDiff.normalize();ball.position.addScaledVector(n,2.9-actualDist);ballVel.addScaledVector(n,Math.max(8,botVel.dot(n)+11));ballVel.x+=botVel.x*.42;ballVel.z+=botVel.z*.42;botBrain.misses=0;botBrain.offset*=.65;botBrain.aggression=Math.max(1,botBrain.aggression-.01)}
+const diff=ball.position.clone().sub(car.position.clone().add(new THREE.Vector3(0,.8,0)));const dist=diff.length();if(dist<2.85){const n=diff.normalize();ball.position.addScaledVector(n,2.85-dist);ballVel.addScaledVector(n,Math.max(6,carVel.dot(n)+8));ballVel.x+=carVel.x*.36;ballVel.z+=carVel.z*.36;ballVel.y+=Math.max(0,carVel.y)*.35}
+ballVel.multiplyScalar(Math.pow(.997,dt*60));ball.rotation.x+=ballVel.z*dt*.55;ball.rotation.z-=ballVel.x*dt*.55;
+const camTarget=car.position.clone().add(new THREE.Vector3(0,3,0));const camPos=car.position.clone().add(new THREE.Vector3(Math.sin(heading)*13,9,Math.cos(heading)*13));camera.position.lerp(camPos,.085);camera.lookAt(camTarget);
 hudTick+=dt;if(hudTick>.1){updateHud();hudTick=0}
 }
 resetGame();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.033);step(dt);renderer.render(scene,camera)}animate();
