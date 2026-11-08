@@ -23,14 +23,13 @@ function box(w,h,d,x,y,z,material,parent=scene){const o=new THREE.Mesh(new THREE
 const floor=new THREE.Mesh(new THREE.BoxGeometry(W,.6,L),grass);floor.position.y=-.35;floor.receiveShadow=true;scene.add(floor);
 for(let z=-54;z<=54;z+=9){const stripe=new THREE.Mesh(new THREE.BoxGeometry(W,.018,6),mat(z%18===0?0x318b62:0x287d59));stripe.position.set(0,-.045,z);scene.add(stripe)}
 // Große Arena-Wände und Seitenbanden
-box(W,5,.8,0,2.2,-HALF_L,dark);box(W,5,.8,0,2.2,HALF_L,dark);box(.8,5,L,-HALF_W,2.2,0,dark);box(.8,5,L,HALF_W,2.2,0,dark);
+box(W-GOAL_W,5,.8,-(W+GOAL_W)/4,2.2,-HALF_L,dark);box(W-GOAL_W,5,.8,(W+GOAL_W)/4,2.2,-HALF_L,dark);box(W-GOAL_W,5,.8,-(W+GOAL_W)/4,2.2,HALF_L,dark);box(W-GOAL_W,5,.8,(W+GOAL_W)/4,2.2,HALF_L,dark);box(.8,5,L,-HALF_W,2.2,0,dark);box(.8,5,L,HALF_W,2.2,0,dark);
 for(const z of [-HALF_L,HALF_L]){
  const goalColor=z<0?orange:blue;
  // Hohe, breite Tore mit Pfosten, Querlatte und Netzrückwand
- box(GOAL_W,GOAL_H,.65,0,GOAL_H/2,z,goalColor);
- box(.55,GOAL_H,9,-GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
- box(.55,GOAL_H,9,GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
- box(GOAL_W, .65,9,0,GOAL_H,z+(z<0?-4.3:4.3),goalColor);
+ box(.65,GOAL_H,9,-GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
+ box(.65,GOAL_H,9,GOAL_W/2,GOAL_H/2,z+(z<0?-4.3:4.3),goalColor);
+ box(GOAL_W,.65,9,0,GOAL_H,z+(z<0?-4.3:4.3),goalColor);
  const net=new THREE.MeshStandardMaterial({color:0xd8f3ff,wireframe:true,transparent:true,opacity:.22});
  box(GOAL_W,GOAL_H,9,0,GOAL_H/2,z+(z<0?-4.3:4.3),net);
 }
