@@ -8,37 +8,42 @@
 @media(min-width:800px){.hint:after{content:"  •  WASD/Pfeile: fahren  •  Leertaste: springen  •  Shift: Boost  •  R: zurücksetzen"}.pad{opacity:.45}.pad:hover{opacity:1}}
 </style></head>
 <body>
-<div id="hud"><div class="brand">ROCKET CARS</div><div class="hint">Fahre den Ball ins gegnerische Tor!</div><div class="top"><div class="score" id="score">0 : 0</div><div class="clock" id="clock">02:00</div></div><div class="boostWrap">BOOST <span id="boostNum">100</span>%<div class="boostBar"><div class="boostFill" id="boostFill"></div></div></div><button class="reset" id="reset">↻ Neustart</button></div>
+<div id="hud"><div class="brand">ROCKET CARS</div><div class="hint">Fahre den Ball ins gegnerische Tor! Orange Autos sind deine Gegner.</div><div class="top"><div class="score" id="score">0 : 0</div><div class="clock" id="clock">02:00</div></div><div class="boostWrap">BOOST <span id="boostNum">100</span>%<div class="boostBar"><div class="boostFill" id="boostFill"></div></div></div><button class="reset" id="reset">↻ Neustart</button></div>
 <div id="controls"><div class="pad left"><div class="key up" data-key="w">▲</div><div class="key down" data-key="s">▼</div><div class="key leftkey" data-key="a">◀</div><div class="key rightkey" data-key="d">▶</div></div><div class="pad right"><div class="key jump" data-key=" ">SPRUNG</div><div class="key boost" data-key="shift">BOOST</div></div></div>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x87bce0);scene.fog=new THREE.Fog(0x87bce0,35,100);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x87bce0);scene.fog=new THREE.Fog(0x87bce0,55,150);
 const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,200);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;document.body.appendChild(renderer.domElement);
 scene.add(new THREE.HemisphereLight(0xd9efff,0x28405a,2));const sun=new THREE.DirectionalLight(0xffffff,2.5);sun.position.set(-8,18,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
 const mat=(c,r=.7,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
 const grass=mat(0x287d59),line=mat(0xd8f4ff),blue=mat(0x168ee8,.35,.25),orange=mat(0xff7a24,.35,.25),black=mat(0x142231,.35,.2),ballMat=mat(0xf3f6fa,.28,.15);
-const floor=new THREE.Mesh(new THREE.BoxGeometry(34,.5,54),grass);floor.position.y=-.35;floor.receiveShadow=true;scene.add(floor);
-for(let z=-24;z<=24;z+=6){const stripe=new THREE.Mesh(new THREE.BoxGeometry(34,.015,3),mat(z%12===0?0x318b62:0x287d59));stripe.position.set(0,-.09,z);scene.add(stripe)}
+const floor=new THREE.Mesh(new THREE.BoxGeometry(48,.5,78),grass);floor.position.y=-.35;floor.receiveShadow=true;scene.add(floor);
+for(let z=-36;z<=36;z+=6){const stripe=new THREE.Mesh(new THREE.BoxGeometry(48,.015,4),mat(z%12===0?0x318b62:0x287d59));stripe.position.set(0,-.09,z);scene.add(stripe)}
 function box(w,h,d,x,y,z,material){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
-box(34,3,.6,0,1.2,-27,black);box(34,3,.6,0,1.2,27,black);box(.6,3,54,-17,1.2,0,black);box(.6,3,54,17,1.2,0,black);
-for(let z of [-27,27]){const goalmat=z<0?orange:blue;box(10,4,.7,0,2,z,goalmat);box(9.5,3.6,.15,0,2,z+(z<0?.42:-.42),black)}
-for(let x of [-17,17])for(let z of [-27,27])box(.7,4,.7,x,2,z,mat(0x19364b));
+box(48,3,.6,0,1.2,-39,black);box(48,3,.6,0,1.2,39,black);box(.6,3,78,-24,1.2,0,black);box(.6,3,78,24,1.2,0,black);
+for(let z of [-39,39]){const goalmat=z<0?orange:blue;box(14,4,.7,0,2,z,goalmat);box(13.5,3.6,.15,0,2,z+(z<0?.42:-.42),black)}
+for(let x of [-24,24])for(let z of [-39,39])box(.7,4,.7,x,2,z,mat(0x19364b));
 const mid=new THREE.Mesh(new THREE.RingGeometry(5.8,6,.9,64),line);mid.rotation.x=-Math.PI/2;mid.position.y=-.08;scene.add(mid);
 const center=new THREE.Mesh(new THREE.CircleGeometry(1.1,48),line);center.rotation.x=-Math.PI/2;center.position.y=-.075;scene.add(center);
-for(let z of [-18,-9,0,9,18]){const stripe=new THREE.Mesh(new THREE.BoxGeometry(34,.025,.12),line);stripe.position.set(0,-.075,z);scene.add(stripe)}
+for(let z of [-18,-9,0,9,18]){const stripe=new THREE.Mesh(new THREE.BoxGeometry(48,.025,.12),line);stripe.position.set(0,-.075,z);scene.add(stripe)}
 // Player car: custom original low-poly body and wheels
 const car=new THREE.Group();scene.add(car);const body=new THREE.Mesh(new THREE.BoxGeometry(2.1,.65,3.2),blue);body.position.y=.65;body.castShadow=true;car.add(body);
 const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.35,.65,1.45),mat(0x9be8ff,.22,.35));cabin.position.set(0,1.18,-.15);cabin.castShadow=true;car.add(cabin);
 const nose=new THREE.Mesh(new THREE.BoxGeometry(1.65,.25,.55),mat(0x07518f));nose.position.set(0,.72,-1.55);car.add(nose);
 for(const x of [-1.08,1.08])for(const z of [-1,1]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.28,16),black);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.42,z);wheel.castShadow=true;car.add(wheel)}
+// Computergesteuerter Gegner
+const bot=new THREE.Group();scene.add(bot);const botBody=new THREE.Mesh(new THREE.BoxGeometry(2.1,.65,3.2),orange);botBody.position.y=.65;botBody.castShadow=true;bot.add(botBody);
+const botCabin=new THREE.Mesh(new THREE.BoxGeometry(1.35,.65,1.45),mat(0xffc18c,.22,.3));botCabin.position.set(0,1.18,-.15);bot.add(botCabin);
+for(const x of [-1.08,1.08])for(const z of [-1,1]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.28,16),black);w.rotation.z=Math.PI/2;w.position.set(x,.42,z);bot.add(w)}
+let botHeading=Math.PI,botVel=new THREE.Vector3();
 const ball=new THREE.Mesh(new THREE.SphereGeometry(1.25,32,24),ballMat);ball.position.set(0,1.4,0);ball.castShadow=true;scene.add(ball);
 const seams=new THREE.Group();ball.add(seams);for(let i=0;i<3;i++){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.255,.018,6,48),mat(0x9aa7b2));ring.rotation.set(i*.8,i*1.1,0);seams.add(ring)}
 const boostFlame=new THREE.Mesh(new THREE.ConeGeometry(.38,1.5,12),mat(0x37dfff,.25));boostFlame.rotation.x=-Math.PI/2;boostFlame.position.set(0,.65,2.2);car.add(boostFlame);
 let carVel=new THREE.Vector3(),ballVel=new THREE.Vector3(),heading=0,boost=100,blueScore=0,orangeScore=0,time=120,finished=false;
 const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' ')e.preventDefault();if(e.key.toLowerCase()==='r')resetGame()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
 document.querySelectorAll('.key').forEach(el=>{const k=el.dataset.key;const down=e=>{e.preventDefault();keys[k]=true},up=e=>{e.preventDefault();keys[k]=false};el.addEventListener('pointerdown',down);el.addEventListener('pointerup',up);el.addEventListener('pointerleave',up);el.addEventListener('pointercancel',up)});
-function resetGame(){car.position.set(0,0,19);carVel.set(0,0,0);heading=0;ball.position.set(0,1.4,0);ballVel.set(0,0,0);boost=100;time=120;finished=false;blueScore=0;orangeScore=0;updateHud()}
+function resetGame(){car.position.set(0,0,28);carVel.set(0,0,0);heading=0;bot.position.set(0,0,-28);botVel.set(0,0,0);botHeading=Math.PI;ball.position.set(0,1.4,0);ballVel.set(0,0,0);boost=100;time=120;finished=false;blueScore=0;orangeScore=0;updateHud()}
 function updateHud(){document.getElementById('score').textContent=blueScore+' : '+orangeScore;document.getElementById('boostNum').textContent=Math.round(boost);document.getElementById('boostFill').style.width=boost+'%';document.getElementById('clock').textContent=String(Math.floor(time/60)).padStart(2,'0')+':'+String(Math.floor(time%60)).padStart(2,'0')}
 document.getElementById('reset').onclick=resetGame;
 const clock=new THREE.Clock();let hudTick=0;
@@ -51,10 +56,21 @@ if(boosting)boost=Math.max(0,boost-36*dt);else boost=Math.min(100,boost+12*dt);
 if(keys[' ']&&car.position.y<.04)carVel.y=8.5;
 carVel.y-=19*dt;car.position.addScaledVector(carVel,dt);if(car.position.y<0){car.position.y=0;carVel.y=Math.max(0,carVel.y)}
 carVel.x*=Math.pow(.985,dt*60);carVel.z*=Math.pow(.985,dt*60);const flat=Math.hypot(carVel.x,carVel.z);if(flat>22){carVel.x*=22/flat;carVel.z*=22/flat}
-car.position.x=THREE.MathUtils.clamp(car.position.x,-15.2,15.2);car.position.z=THREE.MathUtils.clamp(car.position.z,-25,25);car.rotation.y=heading;
+car.position.x=THREE.MathUtils.clamp(car.position.x,-22.2,22.2);car.position.z=THREE.MathUtils.clamp(car.position.z,-37,37);car.rotation.y=heading;
 ballVel.y-=15*dt;ball.position.addScaledVector(ballVel,dt);if(ball.position.y<1.25){ball.position.y=1.25;ballVel.y=Math.abs(ballVel.y)*.72;if(Math.abs(ballVel.y)<.6)ballVel.y=0}
-if(ball.position.x<-15.6||ball.position.x>15.6){ball.position.x=THREE.MathUtils.clamp(ball.position.x,-15.6,15.6);ballVel.x*=-.8}
-if(Math.abs(ball.position.z)>26.1){if(Math.abs(ball.position.x)<5&&ball.position.y<4.2){if(ball.position.z<0)blueScore++;else orangeScore++;ball.position.set(0,2,0);ballVel.set(0,0,0);car.position.set(0,0,19);carVel.set(0,0,0)}else{ball.position.z=Math.sign(ball.position.z)*26.1;ballVel.z*=-.8}}
+if(ball.position.x<-22.6||ball.position.x>22.6){ball.position.x=THREE.MathUtils.clamp(ball.position.x,-22.6,22.6);ballVel.x*=-.8}
+if(Math.abs(ball.position.z)>38.1){if(Math.abs(ball.position.x)<7&&ball.position.y<4.2){if(ball.position.z<0)blueScore++;else orangeScore++;ball.position.set(0,2,0);ballVel.set(0,0,0);car.position.set(0,0,28);carVel.set(0,0,0);bot.position.set(0,0,-28);botVel.set(0,0,0)}else{ball.position.z=Math.sign(ball.position.z)*38.1;ballVel.z*=-.8}}
+// Gegner verfolgt den Ball, richtet sich aus und stößt ihn Richtung blaues Tor
+const target=new THREE.Vector3(ball.position.x,0,ball.position.z);
+const desired=Math.atan2(-(target.x-bot.position.x),-(target.z-bot.position.z));
+let angle=((desired-botHeading+Math.PI*3)%(Math.PI*2))-Math.PI;
+botHeading+=THREE.MathUtils.clamp(angle,-2.1*dt,2.1*dt);
+const botDir=new THREE.Vector3(-Math.sin(botHeading),0,-Math.cos(botHeading));
+botVel.addScaledVector(botDir,12*dt);botVel.multiplyScalar(Math.pow(.982,dt*60));
+const botSpeed=Math.hypot(botVel.x,botVel.z);if(botSpeed>13){botVel.x*=13/botSpeed;botVel.z*=13/botSpeed}
+bot.position.addScaledVector(botVel,dt);bot.position.x=THREE.MathUtils.clamp(bot.position.x,-22,22);bot.position.z=THREE.MathUtils.clamp(bot.position.z,-37,37);bot.rotation.y=botHeading;
+const botDiff=ball.position.clone().sub(bot.position.clone().add(new THREE.Vector3(0,.8,0)));const botDist=botDiff.length();
+if(botDist<2.5){const bn=botDiff.normalize();ball.position.addScaledVector(bn,2.5-botDist);ballVel.addScaledVector(bn,Math.max(7,botVel.dot(bn)+9));ballVel.x+=botVel.x*.35;ballVel.z+=botVel.z*.35}
 const diff=ball.position.clone().sub(car.position.clone().add(new THREE.Vector3(0,.8,0)));const dist=diff.length();if(dist<2.45){const n=diff.normalize();ball.position.addScaledVector(n,2.45-dist);const hit=Math.max(5,carVel.dot(n)+7);ballVel.addScaledVector(n,hit);ballVel.x+=carVel.x*.35;ballVel.z+=carVel.z*.35;ballVel.y+=Math.max(0,carVel.y)*.35}
 ballVel.multiplyScalar(Math.pow(.997,dt*60));ball.rotation.x+=ballVel.z*dt*.7;ball.rotation.z-=ballVel.x*dt*.7;
 const camTarget=car.position.clone().add(new THREE.Vector3(0,2.5,0));const camPos=car.position.clone().add(new THREE.Vector3(Math.sin(heading)*10,7,Math.cos(heading)*10));camera.position.lerp(camPos,.09);camera.lookAt(camTarget);
